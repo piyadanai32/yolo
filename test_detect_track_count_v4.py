@@ -112,9 +112,9 @@ else:
 
 # Initialize counters for each vehicle type
 vehicle_counts = {
-    'car': {'down': [], 'up': []},
-    'motorcycle': {'down': [], 'up': []},
-    'bus': {'down': [], 'up': []}
+    'car': {'out': [], 'in': []},
+    'motorcycle': {'out': [], 'in': []},
+    'bus': {'out': [], 'in': []}
 }
 
 # Vehicle position tracking
@@ -221,11 +221,11 @@ while True:
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
         
         for vehicle_type in target_classes:
-            cv2.putText(processed_frame, f'{vehicle_type.capitalize()} Down: {len(set(vehicle_counts[vehicle_type]["down"]))}', 
+            cv2.putText(processed_frame, f'{vehicle_type.capitalize()} Out: {len(set(vehicle_counts[vehicle_type]["out"]))}', 
                         (10, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
             y_offset += 20
             
-            cv2.putText(processed_frame, f'{vehicle_type.capitalize()} Up: {len(set(vehicle_counts[vehicle_type]["up"]))}', 
+            cv2.putText(processed_frame, f'{vehicle_type.capitalize()} In: {len(set(vehicle_counts[vehicle_type]["in"]))}', 
                         (10, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
             y_offset += 20
             
@@ -302,8 +302,8 @@ while True:
 
         # ถ้าเคยอยู่ซ้ายแล้วข้ามไปขวา (ข้ามเส้นแดง)
         if prev_state_red == 'left' and vehicle_states[(id, 'red')] == 'right':
-            if id not in vehicle_counts[vehicle_type]['down']:
-                vehicle_counts[vehicle_type]['down'].append(id)
+            if id not in vehicle_counts[vehicle_type]['out']:
+                vehicle_counts[vehicle_type]['out'].append(id)
                 cv2.circle(processed_frame, (cx, cy), 4, (0, 0, 255), -1)
 
         # ตรวจสอบสถานะการข้ามเส้นน้ำเงิน (เข้า)
@@ -315,8 +315,8 @@ while True:
 
         # ถ้าเคยอยู่ขวาแล้วข้ามไปซ้าย (ข้ามเส้นน้ำเงิน)
         if prev_state_blue == 'right' and vehicle_states[(id, 'blue')] == 'left':
-            if id not in vehicle_counts[vehicle_type]['up']:
-                vehicle_counts[vehicle_type]['up'].append(id)
+            if id not in vehicle_counts[vehicle_type]['in']:
+                vehicle_counts[vehicle_type]['in'].append(id)
                 cv2.circle(processed_frame, (cx, cy), 4, (255, 0, 0), -1)
         # --- End: Robust counting logic with state ---
 
@@ -330,11 +330,11 @@ while True:
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
     
     for vehicle_type in target_classes:
-        cv2.putText(processed_frame, f'{vehicle_type.capitalize()} Down: {len(set(vehicle_counts[vehicle_type]["down"]))}', 
+        cv2.putText(processed_frame, f'{vehicle_type.capitalize()} Out: {len(set(vehicle_counts[vehicle_type]["out"]))}', 
                     (10, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
         y_offset += 20
         
-        cv2.putText(processed_frame, f'{vehicle_type.capitalize()} Up: {len(set(vehicle_counts[vehicle_type]["up"]))}', 
+        cv2.putText(processed_frame, f'{vehicle_type.capitalize()} In: {len(set(vehicle_counts[vehicle_type]["in"]))}', 
                     (10, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         y_offset += 20
 
@@ -347,8 +347,8 @@ while True:
 print("\nFinal Vehicle Counts:")
 for vehicle_type in target_classes:
     print(f"{vehicle_type.capitalize()}:")
-    print(f"  Down: {len(set(vehicle_counts[vehicle_type]['down']))}")
-    print(f"  Up: {len(set(vehicle_counts[vehicle_type]['up']))}")
+    print(f"  Out: {len(set(vehicle_counts[vehicle_type]['out']))}")
+    print(f"  In: {len(set(vehicle_counts[vehicle_type]['in']))}")
 
 cap.release()
 cv2.destroyAllWindows()
